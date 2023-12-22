@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if not c %}
+<div class="container mt-3">
+<h3 class="text-center">Cart is empty</h3>
+<h5 class="text-center text-success"><a href="{% url 'shop:allcat' %}">Continue Shopping</a></h5>
+</div>
+{% else %}
+<div class="container-fluid m-3">
+<div class="row">
+    <h3 class="text-center text-danger">SHOPPING CART</h3>
+    <div class="col-sm-6">
+        <table class="table table-bordered">
+            <tr><th colspan="5"> CART ITEMS</th></tr>
+            {% for i in c %}
+            <tr>
+                <td><img src="{{i.product.image.url}}" height="100px" width="100px"></td>
+                <td><b >{{i.product.name}}</b></td>
+                 <td><b>₹{{i.product.price}}</b><br>
+                     <b class="text-danger">Usually ship within 2 to 3 days</b><br>
+
+                 <b>Quantity:{{i.quantity}}*{{i.product.price}}</b></td>
+
+                <td>
+                    {% if i.quantity < i.product.stock %}
+                    <a href="{% url 'cart:addtocart' i.product.name %}"><i style="color:black" class="fa fa-plus-circle" aria-hidden="true"></i></a>
+                    <a href="{% url 'cart:cart_remove' i.product.name %}"><i style="color:black" class="fa fa-minus-circle" aria-hidden="true"></i></a><br><br>
+                    <a href="{% url 'cart:full_remove' i.product.name %}"><i style="color:black" class="fa fa-trash" aria-hidden="true"></i></a>
+           {% else %}
+                    <a href="{% url 'cart:cart_remove' i.product.name %}"><i style="color:black" class="fa fa-minus-circle" aria-hidden="true"></i></a><br><br>
+                    <a href="{% url 'cart:full_remove' i.product.name %}"><i style="color:black" class="fa fa-trash" aria-hidden="true"></i></a>
+                </td>
+                {% endif %}
+                <td><b>Total:₹{{i.subtotal}}</b>
+            </td>
+         {% endfor %}
+        </table>
+        </div>
+
+    <div class="col-sm-4" style="position:relative"><table class="table table-bordered" ><tr>
+        <th colspan="4" class="text-center">CHECKOUT</th></tr>
+    <tr><td class="text-center"><b>TOTAL: <span class="text-danger"> {{total}}</span></b></td></tr>
+    </table>
+        <h3><a href="{% url 'cart:orderform' %}"   class="btn btn-danger "><b>Place Order</b></a>
+        <a href="{% url 'shop:allcat' %}" class="btn btn-danger " style="position:absolute;right:0;"><b>Continue Shopping</b></a></h3>
+</div></div></div>
+{% endif %}
+
+{% endblock %}
